@@ -1,0 +1,701 @@
+/* Student Web App Styles */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --telegram-blue: #0088cc;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.container-fluid {
+    padding: 0;
+}
+
+/* Screen Management */
+.screen {
+    display: none;
+    min-height: 100vh;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Welcome Screen */
+#welcomeScreen {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+}
+
+#welcomeScreen .card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    color: var(--dark-color);
+}
+
+/* Instructions Screen */
+#instructionsScreen {
+    background: var(--light-color);
+    padding: 2rem 0;
+    min-height: 100vh;
+}
+
+/* Test Screen */
+#testScreen {
+    background: var(--light-color);
+    min-height: 100vh;
+}
+
+.test-header {
+    background: white !important;
+    border-bottom: 2px solid #e9ecef !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color), #4dabf7);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    border: none;
+    font-weight: 600;
+    padding: 1.5rem;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), #4dabf7);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success-color), #51cf66);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--warning-color), #ffd43b);
+    color: var(--dark-color);
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    transform: scale(1.02);
+}
+
+#testCodeInput {
+    font-size: 1.5rem;
+    text-align: center;
+    letter-spacing: 0.3em;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Question Content */
+#questionContent {
+    min-height: 400px;
+    padding: 2rem;
+}
+
+.question-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.question-number {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    margin-right: 1rem;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Multiple Choice Options */
+.mc-options {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.mc-option {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--light-color);
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.mc-option:hover {
+    border-color: var(--primary-color);
+    background: rgba(13, 110, 253, 0.05);
+    transform: translateX(5px);
+}
+
+.mc-option.selected {
+    background: linear-gradient(135deg, var(--primary-color), #4dabf7);
+    border-color: var(--primary-color);
+    color: white;
+    transform: scale(1.02);
+}
+
+.mc-option input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 1rem;
+    accent-color: var(--primary-color);
+}
+
+.mc-option label {
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    flex: 1;
+}
+
+.option-letter {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 1rem;
+    transition: all 0.3s ease;
+}
+
+.mc-option.selected .option-letter {
+    background: white;
+    color: var(--primary-color);
+}
+
+/* Text Input Questions */
+.text-question {
+    margin-top: 2rem;
+}
+
+.text-parts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.text-part {
+    background: var(--light-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.text-part:focus-within {
+    border-color: var(--primary-color);
+    background: white;
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.1);
+}
+
+.text-part label {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.text-part textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+}
+
+.text-part textarea:focus {
+    outline: none;
+}
+
+/* Question Navigation */
+.question-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+    gap: 0.5rem;
+}
+
+.question-nav-btn {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #e9ecef;
+    background: white;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.question-nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color), #4dabf7);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.question-nav-btn:hover {
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.question-nav-btn:hover::before {
+    opacity: 0.1;
+}
+
+.question-nav-btn.answered {
+    background: linear-gradient(135deg, var(--success-color), #51cf66);
+    border-color: var(--success-color);
+    color: white;
+}
+
+.question-nav-btn.current {
+    background: linear-gradient(135deg, var(--primary-color), #4dabf7);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.question-nav-btn span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Progress Bar */
+.progress {
+    height: 12px;
+    border-radius: 10px;
+    background: #e9ecef;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+    background: linear-gradient(135deg, var(--success-color), #51cf66);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Timer */
+#timerDisplay {
+    background: linear-gradient(135deg, var(--warning-color), #ffd43b);
+    color: var(--dark-color);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
+    border: 2px solid rgba(255, 193, 7, 0.5);
+}
+
+#timerDisplay.warning {
+    background: linear-gradient(135deg, var(--danger-color), #ff6b6b);
+    color: white;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Results Screen */
+#resultsScreen {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: white;
+}
+
+#resultsScreen .card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    color: var(--dark-color);
+}
+
+.score-display {
+    font-size: 4rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--success-color), #51cf66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    margin: 2rem 0;
+    animation: scoreCountUp 2s ease-out;
+}
+
+@keyframes scoreCountUp {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Alerts */
+.alert {
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    border-left: 4px solid;
+}
+
+.alert-info {
+    background: rgba(13, 202, 240, 0.1);
+    border-left-color: var(--info-color);
+    color: #055160;
+}
+
+.alert-warning {
+    background: rgba(255, 193, 7, 0.1);
+    border-left-color: var(--warning-color);
+    color: #664d03;
+}
+
+.alert-success {
+    background: rgba(25, 135, 84, 0.1);
+    border-left-color: var(--success-color);
+    color: #0f5132;
+}
+
+/* Badges */
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 0 0.5rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .text-parts {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .question-grid {
+        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+        gap: 0.3rem;
+    }
+
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .score-display {
+        font-size: 3rem;
+    }
+
+    .test-header .container-fluid .row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .test-header .col-md-6 {
+        text-align: center;
+    }
+
+    .mc-option {
+        padding: 0.75rem 1rem;
+    }
+
+    .option-letter {
+        width: 30px;
+        height: 30px;
+        margin-right: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    #welcomeScreen, #resultsScreen {
+        padding: 1rem;
+    }
+
+    .question-title {
+        font-size: 1.1rem;
+        padding: 0.75rem;
+    }
+
+    .question-number {
+        padding: 0.4rem 0.8rem;
+        min-width: 50px;
+        font-size: 0.9rem;
+    }
+
+    .text-part {
+        padding: 1rem;
+    }
+
+    .text-part textarea {
+        min-height: 80px;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+}
+
+/* Modal Customizations */
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    border-radius: 15px 15px 0 0;
+    border-bottom: none;
+    padding: 1.5rem;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: none;
+    padding: 1.5rem;
+    border-radius: 0 0 15px 15px;
+}
+
+/* Telegram Web App Specific */
+.tg-main-button {
+    background: var(--telegram-blue);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.tg-main-button:hover {
+    background: #0077b3;
+    transform: translateY(-2px);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .card {
+        border: 2px solid var(--dark-color);
+    }
+
+    .btn {
+        border: 2px solid currentColor;
+    }
+
+    .mc-option {
+        border-width: 3px;
+    }
+}
+
+/* Dark mode support for Telegram */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-color: #2c2c2e;
+        --dark-color: #ffffff;
+    }
+
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+
+    .card {
+        background: #2c2c2e;
+        color: white;
+    }
+
+    .form-control, .form-select {
+        background: #3c3c3e;
+        border-color: #48484a;
+        color: white;
+    }
+
+    .mc-option {
+        background: #3c3c3e;
+        border-color: #48484a;
+        color: white;
+    }
+
+    .text-part {
+        background: #3c3c3e;
+        border-color: #48484a;
+        color: white;
+    }
+}

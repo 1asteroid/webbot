@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Tests - Test System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/admin.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}">
+                <i class="bi bi-clipboard-data me-2"></i>
+                Test System Admin
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('admin_test_manage') }}">
+                            <i class="bi bi-file-earmark-text me-1"></i>Tests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_results') }}">
+                            <i class="bi bi-graph-up me-1"></i>Results
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i>{{ session.admin_username }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('admin_logout') }}">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi bi-file-earmark-text me-2"></i>Test Management</h1>
+            <a href="{{ url_for('admin_test_create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Create New Test
+            </a>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search tests...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="btn-group w-100">
+                            <button type="button" class="btn btn-outline-primary" onclick="bulkActivate()">
+                                <i class="bi bi-check-all me-1"></i>Activate Selected
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="bulkDeactivate()">
+                                <i class="bi bi-x-square me-1"></i>Deactivate Selected
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tests Table -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5><i class="bi bi-list-ul me-2"></i>All Tests ({{ tests|length }})</h5>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="selectAll">
+                    <label class="form-check-label" for="selectAll">
+                        Select All
+                    </label>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if tests %}
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="testsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="50">
+                                        <input type="checkbox" class="form-check-input" id="headerCheckbox">
+                                    </th>
+                                    <th>Test Code</th>
+                                    <th>Title</th>
+                                    <th>Questions</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for test in tests %}
+                                    <tr data-test-code="{{ test.code }}" data-status="{{ 'active' if test.active else 'inactive' }}">
+                                        <td>
+                                            <input type="checkbox" class="form-check-input test-checkbox" value="{{ test.code }}">
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary font-monospace">{{ test.code }}</span>
+                                        </td>
+                                        <td>
+                                            <strong>{{ test.title }}</strong>
+                                            {% if test.description %}
+                                                <br><small class="text-muted">{{ test.description[:100] }}{% if test.description|length > 100 %}...{% endif %}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ test.total_questions }} questions</span>
+                                            {% if test.time_limit %}
+                                                <br><small class="text-muted">{{ test.time_limit }} min</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if test.active else 'secondary' }}">
+                                                {{ 'Active' if test.active else 'Inactive' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <small>{{ test.created_at[:10] }}</small>
+                                            <br><small class="text-muted">by {{ test.created_by }}</small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group-vertical btn-group-sm">
+                                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="viewTest('{{ test.code }}')">
+                                                    <i class="bi bi-eye me-1"></i>View
+                                                </button>
+                                                <button type="button" class="btn btn-outline-{{ 'secondary' if test.active else 'success' }} btn-sm"
+                                                        onclick="toggleTest('{{ test.code }}')">
+                                                    <i class="bi bi-{{ 'pause' if test.active else 'play' }} me-1"></i>
+                                                    {{ 'Deactivate' if test.active else 'Activate' }}
+                                                </button>
+                                                <button type="button" class="btn btn-outline-info btn-sm" onclick="viewResults('{{ test.code }}')">
+                                                    <i class="bi bi-graph-up me-1"></i>Results
+                                                </button>
+                                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteTest('{{ test.code }}')">
+                                                    <i class="bi bi-trash me-1"></i>Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-file-earmark-plus display-1"></i>
+                        <h4 class="mt-3">No tests created yet</h4>
+                        <p>Create your first test to get started with the system.</p>
+                        <a href="{{ url_for('admin_test_create') }}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Create First Test
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Details Modal -->
+    <div class="modal fade" id="testDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-eye me-2"></i>Test Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="testDetailsContent">
+                    <!-- Content loaded by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this test?</p>
+                    <p class="text-danger"><strong>This action cannot be undone.</strong></p>
+                    <p>Test code: <span id="deleteTestCode" class="badge bg-secondary"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                        <i class="bi bi-trash me-2"></i>Delete Test
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    <script>
+        // Initialize test management interface
+        initializeTestManagement();
+    </script>
+</body>
+</html>
