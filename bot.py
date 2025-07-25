@@ -19,7 +19,7 @@ from data_manager import DataManager
 logger = logging.getLogger(__name__)
 
 # Bot token from environment
-BOT_TOKEN = os.getenv("BOT_TOKEN", "7319486539:AAHjuMuB2OEkqabQFd2TsSn0SQapZLceM0w")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 
 # Initialize bot and dispatcher (only if token is provided)
 bot = None
